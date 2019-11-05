@@ -14,24 +14,36 @@ export ESMFBIN_PATH=/glade/u/apps/ch/opt/esmf/7.0.0-ncdfio/intel/17.0.1/bin/binO
 export ESMFBINDIR=/glade/u/apps/ch/opt/esmf/7.0.0-ncdfio/intel/17.0.1/bin/binO/Linux.intel.64.mpiuni.default
 
 
-STEP_1_DEPS = ${mapping}/gen_mapping_files/horiz_grid_wais_070820.ieeer8
+STEP_1_DEPS = ${mapping}/gen_mapping_files/horiz_grid_plioenh_070820.ieeer8
 STEP_1_DEPS += ${mapping}/gen_mapping_files/fv0.9x1.25_070727.nc
 STEP_1_DEPS += ${mapping}/gen_mapping_files/topography_plio_enh_gx1v6_190619.CESM2_modMed.ieeei4
-
 STEP_1_TARGETS = ${mapping}/gen_mapping_files/gx1v6plioenh_$(DATE).nc
+
+STEP_2_DEPS = ${gen_mapping_files}/gx1v6plioenh_${DATE}.nc
+STEP_2_TARGETS  = ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_aave.$(DATE).nc
+STEP_2_TARGETS += ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_blin.$(DATE).nc
+STEP_2_TARGETS += ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_patc.$(DATE).nc
+STEP_2_TARGETS += ${gen_mapping_files}/map_gx1v6plioenh_TO_fv09_1.25_aave.$(DATE).nc
+STEP_2_TARGETS += ${gen_mapping_files}/map_gx1v6plioenh_TO_fv09_1.25_blin.$(DATE).nc
+
 
 TARGETS = $(STEP_1_TARGETS)
 
 all : $(TARGETS)
 
-$(STEP_1_DEPS):
+# TODO: check for existence of each dependency
+
+# @$(foreach DEP,$(STEP_1_DEPS),ls $(DEP);)
+$(STEP_1_DEPS): 
+	@$(foreach DEP,$(STEP_1_DEPS),ifeq ("$(wildcard $(DEP))","") $(error Pre-requisite $(DEP) not found);)
+
 
 $(STEP_1_TARGETS): $(STEP_1_DEPS) 
-	@echo "step1"
+	@echo "step1:"
 	@echo "TODO: add a way to tweak values in the csh script"
-	@cd ${gen_mapping_files} && \
+	cd ${gen_mapping_files} && \
 	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh &> ${log_file1}
-	@mv ${gen_mapping_files}/${log_file1} $(PWD)
+	mv ${gen_mapping_files}/${log_file1} $(PWD)
 
 step2:
 	@echo "step2"
@@ -85,5 +97,9 @@ step5:
 		-map aave &> ${log_file5}
 	@echo "done!"
 
+interactive-clean:
+	rm -i ${mapping}/gen_mapping_files/gx1v6plioenh_*.nc
 
-.PHONY : all clean test
+#TODO: clean
+#TODO: test
+.PHONY : all clean interactive-clean test
