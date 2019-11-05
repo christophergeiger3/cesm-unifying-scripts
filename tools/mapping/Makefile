@@ -4,6 +4,8 @@ mapping=${cesm_root}/tools/mapping
 gen_mapping_files=${mapping}/gen_mapping_files
 runoff_to_ocn=${mapping}/gen_mapping_files/runoff_to_ocn
 
+output_folder=$(PWD)/outputs
+log_folder=$(PWD)/logs
 log_file1=log_file_1.txt
 log_file2=log_file_2.txt
 log_file3=log_file_3.txt
@@ -31,19 +33,19 @@ TARGETS = $(STEP_1_TARGETS)
 
 all : $(TARGETS)
 
-# TODO: check for existence of each dependency
+setup:
+	mkdir $(log_folder)
+	mkdir $(output_folder)
 
-# @$(foreach DEP,$(STEP_1_DEPS),ls $(DEP);)
 $(STEP_1_DEPS): 
 	@$(foreach DEP,$(STEP_1_DEPS),ifeq ("$(wildcard $(DEP))","") $(error Pre-requisite $(DEP) not found);)
 
-
-$(STEP_1_TARGETS): $(STEP_1_DEPS) 
+$(STEP_1_TARGETS): setup $(STEP_1_DEPS) 
 	@echo "step1:"
 	@echo "TODO: add a way to tweak values in the csh script"
 	cd ${gen_mapping_files} && \
-	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh &> ${log_file1}
-	mv ${gen_mapping_files}/${log_file1} $(PWD)
+	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh &> ${log_folder}/${log_file1}
+	mv ${STEP_1_TARGETS} ${output_folder}
 
 step2:
 	@echo "step2"
@@ -102,4 +104,4 @@ interactive-clean:
 
 #TODO: clean
 #TODO: test
-.PHONY : all clean interactive-clean test
+.PHONY : all clean interactive-clean test setup
