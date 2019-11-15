@@ -15,47 +15,77 @@ log_file5=log_file_5.txt
 export ESMFBIN_PATH=/glade/u/apps/ch/opt/esmf/7.0.0-ncdfio/intel/17.0.1/bin/binO/Linux.intel.64.mpiuni.default
 export ESMFBINDIR=/glade/u/apps/ch/opt/esmf/7.0.0-ncdfio/intel/17.0.1/bin/binO/Linux.intel.64.mpiuni.default
 
+# Pre-requisites (prereqs) are required to exist before this Makefile is run. Each prereq is also a dependency.
+# === STEP 1 Dependencies & Targets ===
+STEP_1_PREREQS = ${mapping}/gen_mapping_files/horiz_grid_plioenh_070820.ieeer8
+STEP_1_PREREQS += ${mapping}/gen_mapping_files/fv0.9x1.25_070727.nc
+STEP_1_PREREQS += ${mapping}/gen_mapping_files/topography_plio_enh_gx1v6_190619.CESM2_modMed.ieeei4
 
-STEP_1_DEPS = ${mapping}/gen_mapping_files/horiz_grid_plioenh_070820.ieeer8
-STEP_1_DEPS += ${mapping}/gen_mapping_files/fv0.9x1.25_070727.nc
-STEP_1_DEPS += ${mapping}/gen_mapping_files/topography_plio_enh_gx1v6_190619.CESM2_modMed.ieeei4
-STEP_1_TARGETS = ${mapping}/gen_mapping_files/gx1v6plioenh_$(DATE).nc
+STEP_1_DEPS = $(STEP_1_PREREQS)
 
-STEP_2_DEPS = ${gen_mapping_files}/gx1v6plioenh_${DATE}.nc
-STEP_2_TARGETS  = ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_aave.$(DATE).nc
-STEP_2_TARGETS += ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_blin.$(DATE).nc
-STEP_2_TARGETS += ${gen_mapping_files}/map_fv09_1.25_TO_gx1v6plioenh_patc.$(DATE).nc
-STEP_2_TARGETS += ${gen_mapping_files}/map_gx1v6plioenh_TO_fv09_1.25_aave.$(DATE).nc
-STEP_2_TARGETS += ${gen_mapping_files}/map_gx1v6plioenh_TO_fv09_1.25_blin.$(DATE).nc
+STEP_1_TARGETS = ${output_folder}/gx1v6plioenh_$(DATE).nc
+
+# === STEP 2 Dependencies & Targets ===
+STEP_2_PREREQS = ${gen_mapping_files}/gen_cesm_maps.sh
+STEP_2_PREREQS += /glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc  # This is hardcoded, should change...
+STEP_2_DEPS = ${output_folder}/gx1v6plioenh_${DATE}.nc
+STEP_2_DEPS += ${gen_mapping_files}/gen_cesm_maps.sh
+
+STEP_2_TARGETS  = ${output_folder}/map_fv09_1.25_TO_gx1v6plioenh_aave.$(DATE).nc
+STEP_2_TARGETS += ${output_folder}/map_fv09_1.25_TO_gx1v6plioenh_blin.$(DATE).nc
+STEP_2_TARGETS += ${output_folder}/map_fv09_1.25_TO_gx1v6plioenh_patc.$(DATE).nc
+STEP_2_TARGETS += ${output_folder}/map_gx1v6plioenh_TO_fv09_1.25_aave.$(DATE).nc
+STEP_2_TARGETS += ${output_folder}/map_gx1v6plioenh_TO_fv09_1.25_blin.$(DATE).nc
+
+define \n
 
 
-TARGETS = $(STEP_1_TARGETS)
+endef
+
+define check_prereqs
+	@$(foreach DEP,$(1),\
+	ifeq ("$(wildcard $(DEP))","")\
+	$(error ${\n}Pre-requisite $(DEP) not found. ${\n}${\n}\
+	Try adding the file: ${\n}\
+	$(notdir $(DEP)) to $(dir $(DEP))${\n}))
+endef
+
+define setup
+	mkdir -p ${log_folder}
+	mkdir -p ${output_folder}
+endef
+
+TARGETS = $(STEP_1_TARGETS) $(STEP_2_TARGETS)
 
 all : $(TARGETS)
 
-setup:
-	mkdir $(log_folder)
-	mkdir $(output_folder)
+$(STEP_1_PREREQS): 
+	$(call check_prereqs,$(STEP_1_DEPS))
 
-$(STEP_1_DEPS): 
-	@$(foreach DEP,$(STEP_1_DEPS),ifeq ("$(wildcard $(DEP))","") $(error Pre-requisite $(DEP) not found);)
-
-$(STEP_1_TARGETS): setup $(STEP_1_DEPS) 
-	@echo "step1:"
-	@echo "TODO: add a way to tweak values in the csh script"
+# TODO: Find a way to generate and link config.csh on each run.
+$(STEP_1_TARGETS): $(STEP_1_DEPS) 
+	@echo "Step One!"
+	@echo "TODO: add a way to verify nx, ny were read correctly."
+	$(call setup)
 	cd ${gen_mapping_files} && \
 	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh &> ${log_folder}/${log_file1}
-	mv ${STEP_1_TARGETS} ${output_folder}
+	mv ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc ${output_folder}
+	@echo ""
 
-step2:
-	@echo "step2"
-	@${mapping}/gen_mapping_files/gen_cesm_maps.sh  \
+$(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
+	@echo "Step Two!"
+	$(call setup)
+	cp $(STEP_1_TARGETS) ${gen_mapping_files}
+	@${gen_mapping_files}/gen_cesm_maps.sh  \
 		-fatm /glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc  \
 		-natm fv09_1.25  \
 		-focn ${mapping}/gen_mapping_files/gx1v6plioenh_${DATE}.nc  \
 		-nocn gx1v6plioenh  \
-		--nogridcheck &> ${log_file2}
-	@echo "done!"
+		--nogridcheck &> ${log_folder}/${log_file2}
+	mv $(notdir $(STEP_2_TARGETS)) ${output_folder}
+	rm ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc
+	@echo $(notdir $(STEP_2_TARGETS)) ${output_folder}
+	@echo ""
 
 step3:
 	@echo "step3"
@@ -99,9 +129,13 @@ step5:
 		-map aave &> ${log_file5}
 	@echo "done!"
 
-interactive-clean:
-	rm -i ${mapping}/gen_mapping_files/gx1v6plioenh_*.nc
+clean-interactive:
+	rm -ir ${output_folder}
+	rm -ir ${log_folder}/*
 
-#TODO: clean
+clean:
+	rm -rf ${output_folder}
+	rm -rf ${log_folder}
+
 #TODO: test
-.PHONY : all clean interactive-clean test setup
+.PHONY : all clean clean-interactive test setup
