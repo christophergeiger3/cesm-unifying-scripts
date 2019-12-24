@@ -80,6 +80,8 @@ define banner
     printf '### $(1) ###\n'
 endef
 
+include Variables.env
+
 TARGETS = $(STEP_1_TARGETS) $(STEP_2_TARGETS) $(STEP_3_TARGETS) $(STEP_4_TARGETS) $(STEP_5_TARGETS)
 
 all : $(TARGETS) cleanup
@@ -160,8 +162,6 @@ $(STEP_5_TARGETS): $(STEP_4_TARGETS)
 		-map aave 2>&1 | tee ${log_folder}/${log_file5}
 	@$(call banner,Done.)
 
-
-
 clean-interactive:
 	@$(call banner,Cleaning...)
 	rm -irv ${output_folder}
@@ -175,9 +175,9 @@ clean:
 	@$(call banner,Done.)
 
 cleanup:
-        @$(call banner,Cleaning copied files...)
-        rm -v $(notdir $(TARGETS))
-        @$(call banner,Done.)
+	@$(call banner,Cleaning copied files...)
+	rm -v $(notdir $(TARGETS))
+	@$(call banner,Done.)
 
 #TODO: test
 .PHONY : all clean clean-interactive cleanup test setup
