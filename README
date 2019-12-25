@@ -1,5 +1,6 @@
 
-        To run, change the `cesm_root` variable in the config.sh to the root of your cesm directory.
+        To run:
+        Change the `cesm_root` variable in the config.sh to the root of your cesm directory.
         Make `config.sh` executable with `chmod +x ./config.sh`.
         Run `./config.sh && make`.
 
