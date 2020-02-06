@@ -4,7 +4,7 @@
 
 # Example configuration
 
-cesm_root=/glade/u/home/chrgeiger/cesm1_2_0
+cesm_root=$(cd ../.. && pwd)
 gen_mapping_files=${cesm_root}/tools/mapping/gen_mapping_files
 
 nx=320                       # number of i ocn gridpoints (longitudes)
