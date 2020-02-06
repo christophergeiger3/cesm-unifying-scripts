@@ -1,13 +1,29 @@
+git clone https://github.com/christophergeiger3/cesm-unifying-scripts
+cd cesm-unifying-scripts
+cp -r /glade/scratch/ranfeng/cesm_1_2_0/*
+cd tools/mapping
+./config.sh && make			## Generates files with the default configuration (see config.sh)
 
-        To run:
-        Change the `cesm_root` variable in the config.sh to the root of your cesm directory.
-        Make `config.sh` executable with `chmod +x ./config.sh`.
-        Run `./config.sh && make`.
+## The `make` command should take a while to finish. After this command finishes, there should be
+## two new folders generated, which are by default named `logs` and `outputs`. You can change these names as detailed in the wiki.
 
+## Note:
+##   If you would like to tweak the configuration variables of the Makefile, you can do so by editing the
+##   bash values in config.sh, or by directly editing values in Variables.env.
+## For example:
 
+nano config.sh
+./config.sh && make
 
-        The Community Earth System Model version 1.2.0 (CESM1.2.0)
+## OR
 
-                      http://www.cesm.ucar.edu
+nano Variables.env
+nano Defaults.env
+make
 
-        See the CESM web site for documentation and information.
+## See the wiki on Github for more details on how to configure the Makefile.
+
+## Note:
+##   If you would like to get the latest updated version of this script from Github, run the following
+##   in the cesm-unifying-scripts directory
+git pull
