@@ -30,6 +30,5 @@ make
 See the wiki tab for more info on how to configure the Makefile.
 
 Note:
-  If you would like to get the latest updated version of this script from Github, run the following
-  in the cesm-unifying-scripts directory
-git pull
+  If you would like to get the latest updated version of this script from Github, run the `git pull` in
+  the cesm-unifying-scripts directory.
