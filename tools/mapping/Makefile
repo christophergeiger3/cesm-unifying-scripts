@@ -37,7 +37,7 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	@echo "TODO: add a way to verify nx, ny were read correctly."
 	$(call setup)
 	cd ${gen_mapping_files} && \
-	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh 2>&1 ${log_folder}/${log_file1}
+	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh 2>&1 | tee ${log_folder}/${log_file1}
 	cp ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc ${output_folder}
 	@$(call banner,Done.)
 
