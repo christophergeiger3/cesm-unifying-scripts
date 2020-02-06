@@ -3,7 +3,7 @@
 ```bash
 git clone https://github.com/christophergeiger3/cesm-unifying-scripts
 cd cesm-unifying-scripts
-cp -r /glade/scratch/ranfeng/cesm_1_2_0/* .
+cp -r /glade/scratch/ranfeng/cesm1_2_0/* .
 cd tools/mapping
 ./config.sh && make		## Generates files with the default configuration (see config.sh)
 ```
