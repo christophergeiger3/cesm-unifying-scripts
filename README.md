@@ -5,7 +5,7 @@ git clone https://github.com/christophergeiger3/cesm-unifying-scripts
 cd cesm-unifying-scripts
 cp -r /glade/scratch/ranfeng/cesm_1_2_0/*
 cd tools/mapping
-./config.sh && make			## Generates files with the default configuration (see config.sh)
+./config.sh && make		## Generates files with the default configuration (see config.sh)
 ```
 
 The `make` command should take a while to finish. After this command finishes, there should be
