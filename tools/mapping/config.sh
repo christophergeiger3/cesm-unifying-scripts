@@ -1,6 +1,8 @@
 #!/bin/bash
 
+##### Do not edit this line:
 ( set -o posix ; set ) >/tmp/variables.before
+#######################
 
 # Example configuration
 
@@ -51,6 +53,7 @@ ocngridfile=${ocnres}_${DATE}.nc
 #        EOF
 #)
 
+##### Do not edit after this line:
 ( set -o posix ; set ) >/tmp/variables.after
 
 >Variables.env
