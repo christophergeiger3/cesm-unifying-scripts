@@ -1,3 +1,4 @@
+For more details, check out the [wiki](https://github.com/christophergeiger3/cesm-unifying-scripts/wiki)!
 
 ### To run:
 ```bash
