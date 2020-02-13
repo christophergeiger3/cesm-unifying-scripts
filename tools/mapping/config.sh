@@ -38,14 +38,20 @@ ocngridfile=${ocnres}_${DATE}.nc
 # -----------------------------------------------------------------
 # Other Settings --------------------------------------------------
 # -----------------------------------------------------------------
+prefix=gx1v6plioenh
 fatm=/glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc
 natm=fv09_1.25
-focn=${gen_mapping_files}/gx1v6plioenh_${DATE}.nc
-nocn=gx1v6plioenh
+focn=${gen_mapping_files}/${prefix}_${DATE}.nc
+nocn=${prefix}
 file_roff=/glade/p/cesm/cseg/inputdata/lnd/clm2/rtmdata/rdirc.05.061026
-file_nn=map_r05_to_gx1v6plioenh_nn_${DATE}.nc 
+file_nn=map_r05_to_${prefix}_nn_${DATE}.nc 
+file_smooth=map_gx1v6_to_gx1v6plioenh_sm_e1000r300_${DATE}.nc
+file_new=map_r05_to_gx1v6plioenh_nnsm_e1000r300_${DATE}.nc
 fsrc=/glade/p/cesm/cseg/mapping/grids/r05_nomask_070925.nc
 nsrc=r05_nomask
+# Ask ran about this: #-l fv1.9_2.5  \      # feng: this should be the same as fv09_1.25, inherited from Variable.env
+prefix2=fv1.9_2.5
+plio=plioenh
 
 #TODO
 #HERESTRING=$(cat << EOF

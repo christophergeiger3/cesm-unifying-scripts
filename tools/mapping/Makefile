@@ -3,6 +3,8 @@ include include/Variables.env
 include include/Functions.env
 include include/Targets.env
 
+# TODO Check the Targets.env file, and tweak it to make sure the correct targets are generated based on the config.
+
 all : $(TARGETS) cleanup
 
 $(STEP_1_PREREQS): 
@@ -15,7 +17,7 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	$(call setup)
 	cd ${gen_mapping_files} && \
 	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh 2>&1 | tee ${log_folder}/${log_file1}
-	cp ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc ${output_folder}
+	cp ${gen_mapping_files}/${prefix}_$(DATE).nc ${output_folder}
 	@$(call banner,Done.)
 
 $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
@@ -23,10 +25,10 @@ $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS)
 	$(call setup)
 	cp $(STEP_1_TARGETS) ${gen_mapping_files}
 	@${gen_mapping_files}/gen_cesm_maps.sh  \
-		-fatm /glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc  \
-		-natm fv09_1.25  \
-		-focn ${mapping}/gen_mapping_files/gx1v6plioenh_${DATE}.nc  \
-		-nocn gx1v6plioenh  \
+		-fatm ${fatm}  \
+		-natm ${natm}  \
+		-focn ${focn}  \
+		-nocn ${nocn}  \
 		--nogridcheck 2>&1 | tee ${log_folder}/${log_file2}
 	cp -v $(notdir $(STEP_2_TARGETS)) ${output_folder}
 	#rm ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc
@@ -37,10 +39,10 @@ $(STEP_3_TARGETS): $(STEP_2_TARGETS)
 	@$(call banner,Step Three!)
 	$(call setup)
 	@${mapping}/gen_domain_files/gen_domain  \
-		-m ${output_folder}/map_gx1v6plioenh_TO_fv09_1.25_aave.${DATE}.nc  \
-		-o gx1v6plioenh  \
-		-l fv1.9_2.5  \
-		-c plioenh  \
+		-m ${output_folder}/map_${prefix}_TO_${natm}_aave.${DATE}.nc  \
+		-o ${prefix}  \
+		-l ${natm}  \
+		-c ${plio}  \
 		-p 2 2>&1 | tee ${log_folder}/${log_file3}
 	cp $(notdir $(STEP_3_TARGETS)) ${output_folder}
 	@$(call banner,Done.)
@@ -52,11 +54,11 @@ $(STEP_4_TARGETS): $(STEP_3_TARGETS)
 	@cat > ${runoff_to_ocn}/runoff_map_r05_gx1v6_plioenh.nml << EOF
 	  &input_nml
 	   gridtype     = 'rtm'
-	   file_roff    = '/glade/p/cesm/cseg/inputdata/lnd/clm2/rtmdata/rdirc.05.061026'
-	   file_ocn     = '../gx1v6plioenh_${DATE}.nc'
-	   file_nn      = 'map_r05_to_gx1v6plioenh_nn_${DATE}.nc '
-	   file_smooth  = 'map_gx1v6_to_gx1v6plioenh_sm_e1000r300_${DATE}.nc '
-	   file_new     = 'map_r05_to_gx1v6plioenh_nnsm_e1000r300_${DATE}.nc'
+	   file_roff    = '${file_roff}'
+	   file_ocn     = '../${prefix}_${DATE}.nc'
+	   file_nn      = '${file_nn}'
+	   file_smooth  = '${file_smooth}'
+	   file_new     = '${file_new}'
 	   title        = 'runoff map: r05 -> gx1v6, nearest neighbor and smoothed '
 	   eFold        = 1000000.0
 	   rMax         =  300000.0
@@ -74,10 +76,10 @@ $(STEP_4_TARGETS): $(STEP_3_TARGETS)
 $(STEP_5_TARGETS): $(STEP_4_TARGETS)
 	@$(call banner,Step Five!)
 	@${mapping}/gen_mapping_files/gen_ESMF_mapping_file/create_ESMF_map.sh \
-		-fsrc /glade/p/cesm/cseg/mapping/grids/r05_nomask_070925.nc  \
-		-nsrc r05_nomask  \
-		-fdst ../gx1v6plioenh_${DATE}.nc  \
-		-ndst gx1v6plioenh  \
+		-fsrc ${fsrc}  \
+		-nsrc ${nsrc}  \
+		-fdst ../${prefix}_${DATE}.nc  \
+		-ndst ${prefix}  \
 		-map aave 2>&1 | tee ${log_folder}/${log_file5}
 	@$(call banner,Done.)
 
