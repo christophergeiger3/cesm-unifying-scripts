@@ -1,30 +1,7 @@
 include include/Defaults.env
 include include/Variables.env
-
-define \n
-
-
-endef
-
-define check_prereqs
-	@$(foreach DEP,$(1),\
-	ifeq ("$(wildcard $(DEP))","")\
-	$(error ${\n}Pre-requisite $(DEP) not found. ${\n}${\n}\
-	Try adding the file: ${\n}\
-	$(notdir $(DEP)) to $(dir $(DEP))${\n}))
-endef
-
-define setup
-	mkdir -p ${log_folder}
-	mkdir -p ${output_folder}
-endef
-
-define banner
-    printf "\n"
-    printf '### $(1) ###\n'
-endef
-
-TARGETS = $(STEP_1_TARGETS) $(STEP_2_TARGETS) $(STEP_3_TARGETS) $(STEP_4_TARGETS) $(STEP_5_TARGETS)
+include include/Functions.env
+include include/Targets.env
 
 all : $(TARGETS) cleanup
 
