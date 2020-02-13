@@ -5,6 +5,7 @@
 #######################
 
 # Example configuration
+# Add your configuration below:
 
 cesm_root=$(cd ../.. && pwd)
 gen_mapping_files=${cesm_root}/tools/mapping/gen_mapping_files
@@ -34,6 +35,18 @@ DATE=$(date +%y%m%d)
 ocnres='gx1v6plioenh'
 ocngridfile=${ocnres}_${DATE}.nc
 
+# -----------------------------------------------------------------
+# Other Settings --------------------------------------------------
+# -----------------------------------------------------------------
+fatm=/glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc
+natm=fv09_1.25
+focn=${gen_mapping_files}/gx1v6plioenh_${DATE}.nc
+nocn=gx1v6plioenh
+file_roff=/glade/p/cesm/cseg/inputdata/lnd/clm2/rtmdata/rdirc.05.061026
+file_nn=map_r05_to_gx1v6plioenh_nn_${DATE}.nc 
+fsrc=/glade/p/cesm/cseg/mapping/grids/r05_nomask_070925.nc
+nsrc=r05_nomask
+
 #TODO
 #HERESTRING=$(cat << EOF
 #          &input_nml
@@ -56,7 +69,7 @@ ocngridfile=${ocnres}_${DATE}.nc
 ##### Do not edit after this line:
 ( set -o posix ; set ) >/tmp/variables.after
 
->Variables.env
+>include/Variables.env
 for var in $(diff -e /tmp/variables.before /tmp/variables.after | sort)
 do
 	if [[ $var == *"="* ]]; then
