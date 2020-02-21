@@ -15,7 +15,9 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	$(call setup)
 	cd ${gen_mapping_files} && \
 	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh 2>&1 | tee ${log_folder}/${log_file1}
-	cp ${gen_mapping_files}/${prefix}_$(DATE).nc ${output_folder}
+	cd -
+	#cp ${gen_mapping_files}/${prefix}_$(DATE).nc ${output_folder}
+	cp -v $(notdir $(STEP_1_TARGETS)) ${output_folder}
 	@$(call banner,Done.)
 
 $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
