@@ -3,8 +3,6 @@ include include/Variables.env
 include include/Functions.env
 include include/Targets.env
 
-# TODO Check the Targets.env file, and tweak it to make sure the correct targets are generated based on the config.
-
 all : $(TARGETS) cleanup
 
 $(STEP_1_PREREQS): 
