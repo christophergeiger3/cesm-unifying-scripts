@@ -79,6 +79,6 @@ plio=plioenh
 for var in $(diff -e /tmp/variables.before /tmp/variables.after | sort)
 do
 	if [[ $var == *"="* ]]; then
-		printf "$var\n" >> Variables.env
+		printf "$var\n" >> include/Variables.env
 	fi
 done
