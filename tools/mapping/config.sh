@@ -38,20 +38,23 @@ ocngridfile=${ocnres}_${DATE}.nc
 # -----------------------------------------------------------------
 # Other Settings --------------------------------------------------
 # -----------------------------------------------------------------
-prefix=gx1v6plioenh
-fatm=/glade/p/cesm/cseg/mapping/grids/fv0.9x1.25_070727.nc
-natm=fv09_1.25
-focn=${gen_mapping_files}/${prefix}_${DATE}.nc
-nocn=${prefix}
-file_roff=/glade/p/cesm/cseg/inputdata/lnd/clm2/rtmdata/rdirc.05.061026
-file_nn=map_r05_to_${prefix}_nn_${DATE}.nc 
-file_smooth=map_gx1v6_to_gx1v6plioenh_sm_e1000r300_${DATE}.nc
-file_new=map_r05_to_gx1v6plioenh_nnsm_e1000r300_${DATE}.nc
-fsrc=/glade/p/cesm/cseg/mapping/grids/r05_nomask_070925.nc
-nsrc=r05_nomask
+# let's split prefix into two parts
+tag=plioenh
+ocn_res=gx1v6
+atm_res=fv0.9_1.25
+rof_res=05
+fatm=/glade/p/cesm/cseg/mapping/grids/${natm}_070727.nc
+focn=${gen_mapping_files}/${ocn_res}${tag}_${DATE}.nc
+nocn=${ocn_res}${tag}
+file_roff=/glade/p/cesm/cseg/inputdata/lnd/clm2/rtmdata/rdirc.${rof_res}.061026
+file_nn=map_r${rof_res}_to_${ocn_res}${tag}_nn_${DATE}.nc 
+file_smooth=map_r${rof_res}_to_${ocn_res}${tag}_sm_e1000r300_${DATE}.nc
+file_new=map_r${rof_res}_to_${ocn_res}${tag}_nnsm_e1000r300_${DATE}.nc
+fsrc=/glade/p/cesm/cseg/mapping/grids/r${rof_res}_nomask_070925.nc
+nsrc=r${rof_res}_nomask
 # Ask ran about this: #-l fv1.9_2.5  \      # feng: this should be the same as fv09_1.25, inherited from Variable.env
-prefix2=fv1.9_2.5
-plio=plioenh
+prefix2=fv1.9_2.5 # rfeng: This should be consistent with natm
+plio=plioenh # delete this
 
 #TODO
 #HERESTRING=$(cat << EOF
