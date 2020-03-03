@@ -39,10 +39,10 @@ $(STEP_3_TARGETS): $(STEP_2_TARGETS)
 	@$(call banner,Step Three!)
 	$(call setup)
 	@${mapping}/gen_domain_files/gen_domain  \
-		-m ${output_folder}/map_${prefix}_TO_${natm}_aave.${DATE}.nc  \
-		-o ${prefix}  \
+		-m ${output_folder}/map_${nocn}_TO_${natm}_aave.${DATE}.nc  \
+		-o ${nocn}  \
 		-l ${natm}  \
-		-c ${plio}  \
+		-c ${tag}  \
 		-p 2 2>&1 | tee ${log_folder}/${log_file3}
 	cp $(notdir $(STEP_3_TARGETS)) ${output_folder}
 	@$(call banner,Done.)
@@ -55,7 +55,7 @@ $(STEP_4_TARGETS): $(STEP_3_TARGETS)
 	  &input_nml
 	   gridtype     = 'rtm'
 	   file_roff    = '${file_roff}'
-	   file_ocn     = '../${prefix}_${DATE}.nc'
+	   file_ocn     = '../${nocn}_${DATE}.nc'
 	   file_nn      = '${file_nn}'
 	   file_smooth  = '${file_smooth}'
 	   file_new     = '${file_new}'
