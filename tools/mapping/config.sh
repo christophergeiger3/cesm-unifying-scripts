@@ -55,7 +55,6 @@ fsrc=/glade/p/cesm/cseg/mapping/grids/r${rof_res}_nomask_070925.nc
 nsrc=r${rof_res}_nomask
 
 
-# Ask ran about this: #-l fv1.9_2.5  \      # feng: this should be the same as fv09_1.25, inherited from Variable.env
 
 #TODO
 #HERESTRING=$(cat << EOF
