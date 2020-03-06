@@ -101,4 +101,4 @@ cleanup:
 	@$(call banner,Done.)
 
 #TODO: test
-.PHONY : all clean clean-interactive cleanup test setup
+.PHONY : all clean clean-interactive cleanup test setup debug
