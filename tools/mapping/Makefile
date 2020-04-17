@@ -28,8 +28,7 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	EOF
 	${scripdir}/grids/myconvertPOPT < input.scrip_grid
 	cd -
-	cp -v ${gen_mapping_files}/${nocn}_$(DATE).nc ${output_folder}
-	#cp -v $(notdir $(STEP_1_TARGETS)) ${output_folder}
+	cp -v ./${nocn}_$(DATE).nc ${output_folder}
 	@$(call banner,Done.)
 
 $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
