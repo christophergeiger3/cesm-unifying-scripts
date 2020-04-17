@@ -100,5 +100,12 @@ cleanup:
 	rm -v $(notdir $(TARGETS))
 	@$(call banner,Done.)
 
+debug:
+	@echo STEP_1_TARGETS: $(STEP_1_TARGETS)
+	@echo STEP_1_DEPS: $(STEP_1_DEPS)
+	@echo
+	@echo STEP_2_TARGETS: $(STEP_2_TARGETS)
+	@echo STEP_2_DEPS: $(STEP_2_DEPS)
+
 #TODO: test
 .PHONY : all clean clean-interactive cleanup test setup debug
