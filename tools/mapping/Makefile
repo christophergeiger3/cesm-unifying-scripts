@@ -13,13 +13,17 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	@$(call banner,Step One!)
 	@echo "TODO: add a way to verify nx, ny were read correctly."
 	$(call setup)
-	cd ${gen_mapping_files} && \
+	cd ${gen_mapping_files}
+	#$(eval TMP1 := $(shell date +%y%m%d))
+	$(eval TMP1 := $(shell realpath "${popgridfile}" --relative-to=$scriptdir))
+	$(eval TMP2 := $(shell realpath "${kmtgridfile}" --relative-to=$scriptdir))
+	$(eval TMP3 := $(shell realpath "${ocngridfile}" --relative-to=$scriptdir))
 	cat > input.scrip_grid << EOF
 	${nx} ${ny} # nx, ny are from config.h
 	${ocngridname}
-	${popgridfile}
-	${kmtgridfile}
-	${ocngridfile}
+	$(TMP1)
+	$(TMP2)
+	$(TMP3)
 	1
 	EOF
 	${scripdir}/grids/myconvertPOPT < input.scrip_grid
