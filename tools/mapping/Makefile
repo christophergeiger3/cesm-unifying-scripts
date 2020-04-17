@@ -14,10 +14,18 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	@echo "TODO: add a way to verify nx, ny were read correctly."
 	$(call setup)
 	cd ${gen_mapping_files} && \
-	csh ${gen_mapping_files}/mk_SCRIPgridplio_enh.csh 2>&1 | tee ${log_folder}/${log_file1}
+	cat > input.scrip_grid << EOF
+	${nx} ${ny} # nx, ny are from config.h
+	${ocngridname}
+	${popgridfile}
+	${kmtgridfile}
+	${ocngridfile}
+	1
+	EOF
+	${scripdir}/grids/myconvertPOPT < input.scrip_grid
 	cd -
-	#cp ${gen_mapping_files}/${prefix}_$(DATE).nc ${output_folder}
-	cp -v $(notdir $(STEP_1_TARGETS)) ${output_folder}
+	cp -v ${gen_mapping_files}/${nocn}_$(DATE).nc ${output_folder}
+	#cp -v $(notdir $(STEP_1_TARGETS)) ${output_folder}
 	@$(call banner,Done.)
 
 $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
@@ -31,7 +39,6 @@ $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS)
 		-nocn ${nocn}  \
 		--nogridcheck 2>&1 | tee ${log_folder}/${log_file2}
 	cp -v $(notdir $(STEP_2_TARGETS)) ${output_folder}
-	#rm ${gen_mapping_files}/gx1v6plioenh_$(DATE).nc
 	@echo $(notdir $(STEP_2_TARGETS)) ${output_folder}
 	@$(call banner,Done.)
 
