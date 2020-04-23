@@ -26,7 +26,7 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	$(TMP3)
 	1
 	EOF
-	${scripdir}/grids/myconvertPOPT < input.scrip_grid
+	${scripdir}/grids/myconvertPOPT < input.scrip_grid | tee ${log_folder}/${log_file1}
 	cd -
 	cp -v ./${nocn}_$(DATE).nc ${output_folder}
 	@$(call banner,Done.)
