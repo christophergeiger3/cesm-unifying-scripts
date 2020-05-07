@@ -4,6 +4,8 @@ include include/Functions.env
 include include/Targets.env
 
 all : $(TARGETS) cleanup
+#all: $(STEP_1_PREREQS) $(STEP_1_TARGETS) cleanup
+#all: $(STEP_1_PREREQS) $(STEP_1_TARGETS) $(STEP_2_TARGETS) $(STEP_3_TARGETS) cleanup
 
 $(STEP_1_PREREQS): 
 	$(call check_prereqs,$(STEP_1_DEPS))
@@ -13,19 +15,22 @@ $(STEP_1_TARGETS): $(STEP_1_DEPS)
 	@$(call banner,Step One!)
 	@echo "TODO: add a way to verify nx, ny were read correctly."
 	$(call setup)
-	cd ${gen_mapping_files} && \
+	cd ${gen_mapping_files}
+	#$(eval TMP1 := $(shell date +%y%m%d))
+	$(eval TMP1 := $(shell realpath "${popgridfile}" --relative-to=$scriptdir))
+	$(eval TMP2 := $(shell realpath "${kmtgridfile}" --relative-to=$scriptdir))
+	$(eval TMP3 := $(shell realpath "${ocngridfile}" --relative-to=$scriptdir))
 	cat > input.scrip_grid << EOF
 	${nx} ${ny} # nx, ny are from config.h
 	${ocngridname}
-	${popgridfile}
-	${kmtgridfile}
-	${ocngridfile}
+	$(TMP1)
+	$(TMP2)
+	$(TMP3)
 	1
 	EOF
-	${scripdir}/grids/myconvertPOPT < input.scrip_grid
+	${scripdir}/grids/myconvertPOPT < input.scrip_grid | tee ${log_folder}/${log_file1}
 	cd -
-	cp -v ${gen_mapping_files}/${nocn}_$(DATE).nc ${output_folder}
-	#cp -v $(notdir $(STEP_1_TARGETS)) ${output_folder}
+	cp -v ./${nocn}_$(DATE).nc ${output_folder}
 	@$(call banner,Done.)
 
 $(STEP_2_TARGETS): $(STEP_2_DEPS) $(STEP_1_TARGETS) 
