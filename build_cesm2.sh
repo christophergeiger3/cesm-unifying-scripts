@@ -9,4 +9,4 @@ git clone -b "release-cesm${version}" https://github.com/ESCOMP/CESM.git "$dirna
 cd "$dirname" && ./manage_externals/checkout_externals
 
 # Copy cesm-unifying scripts to the new cesm repo
-cp -r cime/ cesm2.1.1/
+cd .. && cp -r cime/ cesm2.1.1/
