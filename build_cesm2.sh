@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "$1" = "-h" ]] && printf "Usage: $0 [VERSION]\nDefaults to cesm2.1.1\n" && exit
+[[ "$1" = "-h" ]] || [[ "$1" = "--help" ]] && printf "Usage: $0 [VERSION]\nDefaults to cesm2.1.1\n" && exit
 [[ -z "$1" ]] && version=2.1.1 || version="$1"
 
 dirname="cesm${version}"
